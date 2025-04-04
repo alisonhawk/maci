@@ -16,7 +16,7 @@ The constructor shown below accepts several arguments:
 - `PollFactory` address
 - `MessageProcessorFactory` address
 - `TallyFactory` address
-- `SignUpGatekeeper` address
+- `IBasePolicy` address
 - `InitialVoiceCreditProxy` address
 - The depth of the state tree
 
@@ -25,7 +25,7 @@ constructor(
   IPollFactory _pollFactory,
   IMessageProcessorFactory _messageProcessorFactory,
   ITallyFactory _tallyFactory,
-  SignUpGatekeeper _signUpGatekeeper,
+  IBasePolicy _signUpPolicy,
   uint8 _stateTreeDepth,
   uint256[5] memory _emptyBallotRoots
 ) payable {
@@ -36,7 +36,7 @@ constructor(
   pollFactory = _pollFactory;
   messageProcessorFactory = _messageProcessorFactory;
   tallyFactory = _tallyFactory;
-  signUpGatekeeper = _signUpGatekeeper;
+  signUpPolicy = _signUpPolicy;
   stateTreeDepth = _stateTreeDepth;
   maxSignups = uint256(STATE_TREE_ARITY) ** uint256(_stateTreeDepth);
   emptyBallotRoots = _emptyBallotRoots;
@@ -52,19 +52,17 @@ After this, all of the parameters will be stored to state, and then the contract
 
 ## SignUp
 
-Next, we have the `signUp` function, which allows users to `signUp`, as long as they pass the conditions set in the `SignUpGatekeeper` contract. This contract can use any mean necessary to gatekeep access to MACI's polls. For instance, only wallets with a specific ERC721 token can be allowed to sign up.
+Next, we have the `signUp` function, which allows users to `signUp`, as long as they pass the conditions set in the `signUpPolicy` contract. This contract can use any mean necessary to gatekeep access to MACI's polls. For instance, only wallets with a specific ERC721 token can be allowed to sign up.
 
 This function does the following:
 
 - checks that the maximum number of signups has not been reached. Given a tree depth of 10, this will be $2 ** 10 - 1$.
 - checks that the provided public key is a valid baby-jubjub point
-- registers the user using the sign up gatekeeper contract. It is important that whichever gatekeeper is used, this reverts if a user tries to sign up twice or the conditions are not met (i.e returning false is not enough)
-- calls the voice credit proxy to retrieve the number of allocated voice credits allocated to this voter
-- hashes the voice credits alongside the user's MACI public key and the current time
-- insert this hashed data into the state tree.
+- registers the user using the sign up policy contract. It is important that whichever policy is used, this reverts if a user tries to sign up twice or the conditions are not met (i.e returning false is not enough)
+- hashes the public key and inserts it into the state tree.
 
-```solidity
-function signUp(PubKey memory _pubKey, bytes memory _signUpGatekeeperData) public virtual {
+```ts
+function signUp(PubKey memory _pubKey, bytes memory _signUpPolicyData) public virtual {
   // ensure we do not have more signups than what the circuits support
   if (leanIMTData.size >= maxSignups) revert TooManySignups();
 
@@ -73,9 +71,9 @@ function signUp(PubKey memory _pubKey, bytes memory _signUpGatekeeperData) publi
     revert InvalidPubKey();
   }
 
-  // Register the user via the sign-up gatekeeper. This function should
+  // Register the user via the sign-up policy. This function should
   // throw if the user has already registered or if ineligible to do so.
-  signUpGatekeeper.register(msg.sender, _signUpGatekeeperData);
+  signUpPolicy.register(msg.sender, _signUpPolicyData);
 
   // Hash the public key and insert it into the tree.
   uint256 pubKeyHash = hashLeftRight(_pubKey.x, _pubKey.y);
@@ -92,7 +90,7 @@ function signUp(PubKey memory _pubKey, bytes memory _signUpGatekeeperData) publi
 
 Once everything has been setup, polls can be deployed using the `deployPoll` function. Polls can be deployed concurrently, as each deployment has its own separate set of contracts and state.
 
-```solidity
+```ts
 function deployPoll(DeployPollArgs calldata args) public virtual returns (PollContracts memory) {
   // cache the poll to a local variable so we can increment it
   uint256 pollId = nextPollId;
@@ -112,7 +110,7 @@ function deployPoll(DeployPollArgs calldata args) public virtual returns (PollCo
     maci: IMACI(address(this)),
     verifier: IVerifier(args.verifier),
     vkRegistry: IVkRegistry(args.vkRegistry),
-    gatekeeper: ISignUpGatekeeper(args.gatekeeper),
+    policy: IsignUpPolicy(args.policy),
     initialVoiceCreditProxy: IInitialVoiceCreditProxy(args.initialVoiceCreditProxy)
   });
 
@@ -152,6 +150,10 @@ Polls require the following information:
 - `verifier`: the address of the zk-SNARK verifier contract
 - `vkRegistry`: the address of the vk registry contract
 - `mode`: the mode of the poll, to set whether it supports quadratic voting or non quadratic voting
+- `signUpPolicy`: the address of the sign up policy contract
+- `initialVoiceCreditProxy`: the address of the initial voice credit proxy contract
+- `relayers`: the addresses of the relayers for the poll (if offchain voting is enabled)
+- `voteOptions`: the number of vote options for the poll
 
 :::info
 Please be advised that the number of signups in the MACI contract (number of leaves in the merkle tree holding MACI's state) considers the initial zero leaf as one signup. For this reason, when accounting for the real users signed up to MACI, you should subtract one from the value returned from the `numSignUps` function.

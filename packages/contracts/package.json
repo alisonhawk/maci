@@ -1,6 +1,7 @@
 {
-  "name": "maci-contracts",
-  "version": "2.5.0",
+  "name": "@maci-protocol/contracts",
+  "version": "3.0.0",
+  "private": false,
   "description": "Solidity Smart Contracts for MACI (Minimal Anti-Collusion Infrastructure)",
   "main": "build/ts/index.js",
   "exports": {
@@ -29,6 +30,9 @@
     "README.md",
     "CHANGELOG.md"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "watch": "tsc --watch",
     "hardhat": "hardhat node",
@@ -47,17 +51,17 @@
     "test:tallyNonQv": "pnpm run test ./tests/TallyNonQv.test.ts",
     "test:hasher": "pnpm run test ./tests/Hasher.test.ts",
     "test:utilities": "pnpm run test ./tests/Utilities.test.ts",
-    "test:signupGatekeeper": "pnpm run test ./tests/gatekeepers/SignUpGatekeeper.test.ts",
+    "test:signup_policy": "pnpm run test ./tests/policies/SignUpPolicy.test.ts",
     "test:verifier": "pnpm run test ./tests/Verifier.test.ts",
     "test:hasherBenchmarks": "pnpm run test ./tests/HasherBenchmarks.test.ts",
     "test:vkRegistry": "pnpm run test ./tests/VkRegistry.test.ts",
     "test:pollFactory": "pnpm run test ./tests/PollFactory.test.ts",
-    "test:eas_gatekeeper": "pnpm run test ./tests/gatekeepers/EASGatekeeper.test.ts",
-    "test:hats_gatekeeper": "pnpm run test ./tests/gatekeepers/HatsGatekeeper.test.ts",
-    "test:gitcoin_gatekeeper": "pnpm run test ./tests/gatekeepers/GitcoinPassportGatekeeper.test.ts",
-    "test:zupass_gatekeeper": "pnpm run test ./tests/gatekeepers/ZupassGatekeeper.test.ts",
-    "test:semaphore_gatekeeper": "pnpm run test ./tests/gatekeepers/SemaphoreGatekeeper.test.ts",
-    "test:anon_aadhaar_gatekeeper": "pnpm run test ./tests/gatekeepers/AnonAadhaarGatekeeper.test.ts",
+    "test:eas_policy": "pnpm run test ./tests/policies/EASPolicy.test.ts",
+    "test:hats_policy": "pnpm run test ./tests/policies/HatsPolicy.test.ts",
+    "test:gitcoin_policy": "pnpm run test ./tests/policies/GitcoinPassportPolicy.test.ts",
+    "test:zupass_policy": "pnpm run test ./tests/policies/ZupassPolicy.test.ts",
+    "test:semaphore_policy": "pnpm run test ./tests/policies/SemaphorePolicy.test.ts",
+    "test:anon_aadhaar_policy": "pnpm run test ./tests/policies/AnonAadhaarPolicy.test.ts",
     "deploy": "hardhat deploy-full",
     "deploy-poll": "hardhat deploy-poll",
     "verify": "hardhat verify-full",
@@ -162,7 +166,7 @@
     "benchmark:polygon-amoy": "pnpm run benchmark --network polygon_amoy"
   },
   "dependencies": {
-    "@excubiae/contracts": "^0.4.0",
+    "@excubiae/contracts": "^0.7.0",
     "@nomicfoundation/hardhat-ethers": "^3.0.8",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/contracts": "^5.2.0",
@@ -174,9 +178,9 @@
     "ethers": "^6.13.5",
     "hardhat": "^2.22.19",
     "lowdb": "^1.0.0",
-    "maci-core": "^2.5.0",
-    "maci-crypto": "^2.5.0",
-    "maci-domainobjs": "^2.5.0",
+    "@maci-protocol/core": "^3.0.0",
+    "@maci-protocol/crypto": "^3.0.0",
+    "@maci-protocol/domainobjs": "^3.0.0",
     "snarkjs": "^0.7.5",
     "solady": "^0.1.12",
     "solidity-docgen": "^0.6.0-beta.36",

@@ -11,7 +11,7 @@ Code location: [Params.sol](https://github.com/privacy-scaling-explorations/maci
 
 A contract holding three structs:
 
-```solidity
+```ts
 /// @notice A struct holding the depths of the merkle trees
 struct TreeDepths {
   uint8 intStateTreeDepth;
@@ -25,7 +25,7 @@ struct ExtContracts {
   IMACI maci;
   IVerifier verifier;
   IVkRegistry vkRegistry;
-  ISignUpGatekeeper gatekeeper;
+  IBasePolicy policy;
   IInitialVoiceCreditProxy initialVoiceCreditProxy;
 }
 ```

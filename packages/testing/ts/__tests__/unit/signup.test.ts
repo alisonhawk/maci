@@ -1,6 +1,4 @@
-import { expect } from "chai";
-import { Signer } from "ethers";
-import { Keypair } from "maci-domainobjs";
+import { Keypair } from "@maci-protocol/domainobjs";
 import {
   getDefaultSigner,
   getSignedupUserData,
@@ -8,9 +6,11 @@ import {
   setVerifyingKeys,
   signup,
   deployMaci,
-  deployFreeForAllSignUpGatekeeper,
+  deployFreeForAllSignUpPolicy,
   deployVkRegistryContract,
-} from "maci-sdk";
+} from "@maci-protocol/sdk";
+import { expect } from "chai";
+import { Signer } from "ethers";
 
 import { deployArgs, verifyingKeysArgs, DEFAULT_SG_DATA } from "../../constants";
 
@@ -24,8 +24,8 @@ describe("signup", function test() {
   // before all tests we deploy the vk registry contract and set the verifying keys
   before(async () => {
     signer = await getDefaultSigner();
-    const [signupGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-    const signupGatekeeperContractAddress = await signupGatekeeper.getAddress();
+    const [signupPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+    const signupPolicyContractAddress = await signupPolicy.getAddress();
 
     // we deploy the vk registry contract
     const vkRegistryAddress = await deployVkRegistryContract({ signer });
@@ -36,7 +36,7 @@ describe("signup", function test() {
     maciAddresses = await deployMaci({
       ...deployArgs,
       signer,
-      signupGatekeeperAddress: signupGatekeeperContractAddress,
+      signupPolicyAddress: signupPolicyContractAddress,
     });
   });
 

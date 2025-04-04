@@ -1,5 +1,7 @@
 import type { Proof } from "../../ts/types";
 import type { MACI, MessageProcessor, Poll, Tally, Verifier, VkRegistry } from "../../typechain-types";
+import type { Poll as PollWrapper } from "@maci-protocol/core";
+import type { Keypair, PrivKey } from "@maci-protocol/domainobjs";
 import type { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 import type {
   BaseContract,
@@ -12,8 +14,6 @@ import type {
   InterfaceAbi,
 } from "ethers";
 import type { Libraries, TaskArguments } from "hardhat/types";
-import type { Poll as PollWrapper } from "maci-core";
-import type { Keypair, PrivKey } from "maci-domainobjs";
 
 /**
  * Interface that represents deploy params
@@ -556,35 +556,33 @@ export interface IRegisterContract<ID = EContracts> {
 }
 
 /**
- * Enum represents gatekeeper types
+ * Enum represents policy types
  */
-export enum EGatekeepers {
-  FreeForAll = "FreeForAllGatekeeper",
-  Token = "SignUpTokenGatekeeper",
-  EAS = "EASGatekeeper",
-  GitcoinPassport = "GitcoinPassportGatekeeper",
-  Hats = "HatsGatekeeper",
-  Zupass = "ZupassGatekeeper",
-  Semaphore = "SemaphoreGatekeeper",
-  MerkleProof = "MerkleProofGatekeeper",
-  SignUp = "SignUpGatekeeper",
-  AnonAadhaar = "AnonAadhaarGatekeeper",
+export enum EPolicies {
+  FreeForAll = "FreeForAllPolicy",
+  Token = "TokenPolicy",
+  EAS = "EASPolicy",
+  GitcoinPassport = "GitcoinPassportPolicy",
+  Hats = "HatsPolicy",
+  Zupass = "ZupassPolicy",
+  Semaphore = "SemaphorePolicy",
+  MerkleProof = "MerkleProofPolicy",
+  AnonAadhaar = "AnonAadhaarPolicy",
 }
 
 /**
- * Enum represents gatekeeper factory types
+ * Enum represents policyfactory types
  */
-export enum EGatekeeperFactories {
-  FreeForAll = "FreeForAllGatekeeperFactory",
-  Token = "SignUpTokenGatekeeperFactory",
-  EAS = "EASGatekeeperFactory",
-  GitcoinPassport = "GitcoinPassportGatekeeperFactory",
-  Hats = "HatsGatekeeperFactory",
-  Zupass = "ZupassGatekeeperFactory",
-  Semaphore = "SemaphoreGatekeeperFactory",
-  MerkleProof = "MerkleProofGatekeeperFactory",
-  SignUp = "SignUpGatekeeperFactory",
-  AnonAadhaar = "AnonAadhaarGatekeeperFactory",
+export enum EPolicyFactories {
+  FreeForAll = "FreeForAllPolicyFactory",
+  Token = "TokenPolicyFactory",
+  EAS = "EASPolicyFactory",
+  GitcoinPassport = "GitcoinPassportPolicyFactory",
+  Hats = "HatsPolicyFactory",
+  Zupass = "ZupassPolicyFactory",
+  Semaphore = "SemaphorePolicyFactory",
+  MerkleProof = "MerkleProofPolicyFactory",
+  AnonAadhaar = "AnonAadhaarPolicyFactory",
 }
 
 /**
@@ -592,14 +590,13 @@ export enum EGatekeeperFactories {
  */
 export enum ECheckers {
   FreeForAll = "FreeForAllChecker",
-  Token = "SignUpTokenChecker",
+  Token = "TokenChecker",
   EAS = "EASChecker",
   GitcoinPassport = "GitcoinPassportChecker",
   Hats = "HatsChecker",
   Zupass = "ZupassChecker",
   Semaphore = "SemaphoreChecker",
   MerkleProof = "MerkleProofChecker",
-  SignUp = "SignUpChecker",
   AnonAadhaar = "AnonAadhaarChecker",
 }
 
@@ -608,14 +605,13 @@ export enum ECheckers {
  */
 export enum ECheckerFactories {
   FreeForAll = "FreeForAllCheckerFactory",
-  Token = "SignUpTokenCheckerFactory",
+  Token = "TokenCheckerFactory",
   EAS = "EASCheckerFactory",
   GitcoinPassport = "GitcoinPassportCheckerFactory",
   Hats = "HatsCheckerFactory",
   Zupass = "ZupassCheckerFactory",
   Semaphore = "SemaphoreCheckerFactory",
   MerkleProof = "MerkleProofCheckerFactory",
-  SignUp = "SignUpCheckerFactory",
   AnonAadhaar = "AnonAadhaarCheckerFactory",
 }
 
@@ -627,20 +623,26 @@ export enum EInitialVoiceCreditProxies {
 }
 
 /**
+ * Enum represents initial voice credit proxies factories
+ */
+export enum EInitialVoiceCreditProxiesFactories {
+  Constant = "ConstantInitialVoiceCreditProxyFactory",
+}
+
+/**
  * Enum represents deployed contracts
  */
 export enum EContracts {
   ConstantInitialVoiceCreditProxy = "ConstantInitialVoiceCreditProxy",
-  FreeForAllGatekeeper = "FreeForAllGatekeeper",
-  EASGatekeeper = "EASGatekeeper",
-  GitcoinPassportGatekeeper = "GitcoinPassportGatekeeper",
-  HatsGatekeeper = "HatsGatekeeper",
-  ZupassGatekeeper = "ZupassGatekeeper",
-  SignUpTokenGatekeeper = "SignUpTokenGatekeeper",
+  FreeForAllPolicy = "FreeForAllPolicy",
+  EASPolicy = "EASPolicy",
+  GitcoinPassportPolicy = "GitcoinPassportPolicy",
+  HatsPolicy = "HatsPolicy",
+  ZupassPolicy = "ZupassPolicy",
+  TokenPolicy = "TokenPolicy",
   ZupassGroth16Verifier = "ZupassGroth16Verifier",
-  SemaphoreGatekeeper = "SemaphoreGatekeeper",
-  MerkleProofGatekeeper = "MerkleProofGatekeeper",
-  SignUpGatekeeper = "SignUpGatekeeper",
+  SemaphorePolicy = "SemaphorePolicy",
+  MerkleProofPolicy = "MerkleProofPolicy",
   Verifier = "Verifier",
   MACI = "MACI",
   PollFactory = "PollFactory",
@@ -654,9 +656,6 @@ export enum EContracts {
   Poll = "Poll",
   Tally = "Tally",
   MessageProcessor = "MessageProcessor",
-  SignupGatekeeperFactory = "SignupGatekeeperFactory",
-  Checker = "Checker",
-  CheckerFactory = "CheckerFactory",
 }
 
 /**

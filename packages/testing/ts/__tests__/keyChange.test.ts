@@ -1,7 +1,6 @@
-import { expect } from "chai";
-import { VOTE_OPTION_TREE_ARITY } from "maci-core";
-import { genRandomSalt } from "maci-crypto";
-import { Keypair } from "maci-domainobjs";
+import { VOTE_OPTION_TREE_ARITY } from "@maci-protocol/core";
+import { genRandomSalt } from "@maci-protocol/crypto";
+import { Keypair } from "@maci-protocol/domainobjs";
 import {
   generateVote,
   getBlockTimestamp,
@@ -22,10 +21,11 @@ import {
   isArm,
   deployMaci,
   IMaciContracts,
-  deployFreeForAllSignUpGatekeeper,
+  deployFreeForAllSignUpPolicy,
   deployConstantInitialVoiceCreditProxy,
   deployVerifier,
-} from "maci-sdk";
+} from "@maci-protocol/sdk";
+import { expect } from "chai";
 
 import fs from "fs";
 
@@ -97,9 +97,10 @@ describe("keyChange tests", function test() {
     // we deploy the vk registry contract
     vkRegistryAddress = await deployVkRegistryContract({ signer });
 
-    const initialVoiceCreditProxy = await deployConstantInitialVoiceCreditProxy(
-      DEFAULT_INITIAL_VOICE_CREDITS,
+    const [initialVoiceCreditProxy] = await deployConstantInitialVoiceCreditProxy(
+      { amount: DEFAULT_INITIAL_VOICE_CREDITS },
       signer,
+      undefined,
       true,
     );
     initialVoiceCreditProxyContractAddress = await initialVoiceCreditProxy.getAddress();
@@ -129,17 +130,17 @@ describe("keyChange tests", function test() {
     const expectedPerVoteOptionTally = (initialVoteAmount - 1n) ** 2n;
 
     before(async () => {
-      const [signupGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-      const signupGatekeeperContractAddress = await signupGatekeeper.getAddress();
+      const [signupPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+      const signupPolicyContractAddress = await signupPolicy.getAddress();
 
-      const [pollGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-      const pollGatekeeperContractAddress = await pollGatekeeper.getAddress();
+      const [pollPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+      const pollPolicyContractAddress = await pollPolicy.getAddress();
 
       // deploy the smart contracts
       maciAddresses = await deployMaci({
         ...deployArgs,
         signer,
-        signupGatekeeperAddress: signupGatekeeperContractAddress,
+        signupPolicyAddress: signupPolicyContractAddress,
       });
 
       const startDate = await getBlockTimestamp(signer);
@@ -154,7 +155,7 @@ describe("keyChange tests", function test() {
         maciAddress: maciAddresses.maciContractAddress,
         verifierContractAddress,
         vkRegistryContractAddress: vkRegistryAddress,
-        gatekeeperContractAddress: pollGatekeeperContractAddress,
+        policyContractAddress: pollPolicyContractAddress,
         initialVoiceCreditProxyContractAddress,
       });
       stateIndex = BigInt(
@@ -282,17 +283,17 @@ describe("keyChange tests", function test() {
     const expectedPerVoteOptionTally = initialVoteAmount ** 2n;
 
     before(async () => {
-      const [signupGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-      const signupGatekeeperContractAddress = await signupGatekeeper.getAddress();
+      const [signupPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+      const signupPolicyContractAddress = await signupPolicy.getAddress();
 
-      const [pollGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-      const pollGatekeeperContractAddress = await pollGatekeeper.getAddress();
+      const [pollPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+      const pollPolicyContractAddress = await pollPolicy.getAddress();
 
       // deploy the smart contracts
       maciAddresses = await deployMaci({
         ...deployArgs,
         signer,
-        signupGatekeeperAddress: signupGatekeeperContractAddress,
+        signupPolicyAddress: signupPolicyContractAddress,
       });
 
       const startDate = await getBlockTimestamp(signer);
@@ -307,7 +308,7 @@ describe("keyChange tests", function test() {
         maciAddress: maciAddresses.maciContractAddress,
         verifierContractAddress,
         vkRegistryContractAddress: vkRegistryAddress,
-        gatekeeperContractAddress: pollGatekeeperContractAddress,
+        policyContractAddress: pollPolicyContractAddress,
         initialVoiceCreditProxyContractAddress,
       });
       stateIndex = BigInt(
@@ -421,17 +422,17 @@ describe("keyChange tests", function test() {
     const expectedPerVoteOptionTally = (initialVoteAmount - 3n) ** 2n;
 
     before(async () => {
-      const [signupGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-      const signupGatekeeperContractAddress = await signupGatekeeper.getAddress();
+      const [signupPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+      const signupPolicyContractAddress = await signupPolicy.getAddress();
 
-      const [pollGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-      const pollGatekeeperContractAddress = await pollGatekeeper.getAddress();
+      const [pollPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+      const pollPolicyContractAddress = await pollPolicy.getAddress();
 
       // deploy the smart contracts
       maciAddresses = await deployMaci({
         ...deployArgs,
         signer,
-        signupGatekeeperAddress: signupGatekeeperContractAddress,
+        signupPolicyAddress: signupPolicyContractAddress,
       });
 
       const startDate = await getBlockTimestamp(signer);
@@ -446,7 +447,7 @@ describe("keyChange tests", function test() {
         maciAddress: maciAddresses.maciContractAddress,
         verifierContractAddress,
         vkRegistryContractAddress: vkRegistryAddress,
-        gatekeeperContractAddress: pollGatekeeperContractAddress,
+        policyContractAddress: pollPolicyContractAddress,
         initialVoiceCreditProxyContractAddress,
       });
       stateIndex = BigInt(

@@ -1,6 +1,6 @@
+import type { MACI, Poll } from "@maci-protocol/contracts/typechain-types";
+import type { PrivKey, PubKey } from "@maci-protocol/domainobjs";
 import type { Signer } from "ethers";
-import type { MACI, Poll } from "maci-contracts/typechain-types";
-import type { PrivKey, PubKey } from "maci-domainobjs";
 
 /**
  * Interface for the arguments to the isJoinedUser command
@@ -84,7 +84,7 @@ export interface ISignupArgs {
   maciAddress: string;
 
   /**
-   * The signup gatekeeper data
+   * The signup policy data
    */
   sgData: string;
 }
@@ -349,7 +349,7 @@ export interface IJoinPollArgs {
   pollWasm?: string;
 
   /**
-   * The signup gatekeeper data
+   * The signup policy data
    */
   sgDataArg: string;
 

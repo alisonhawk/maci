@@ -1,10 +1,7 @@
 /* eslint-disable no-await-in-loop */
-import chai from "chai";
-import chaiAsPromised from "chai-as-promised";
-import { Signer } from "ethers";
-import { MaciState, TreeDepths, VOTE_OPTION_TREE_ARITY } from "maci-core";
-import { genPubKey, genRandomSalt, poseidon } from "maci-crypto";
-import { Keypair, PCommand, PrivKey, PubKey } from "maci-domainobjs";
+import { MaciState, TreeDepths, VOTE_OPTION_TREE_ARITY } from "@maci-protocol/core";
+import { genPubKey, genRandomSalt, poseidon } from "@maci-protocol/crypto";
+import { Keypair, PCommand, PrivKey, PubKey } from "@maci-protocol/domainobjs";
 import {
   cidToBytes32,
   createCidFromObject,
@@ -29,10 +26,13 @@ import {
   timeTravel,
   deployMaci,
   type IMaciContracts,
-  deployFreeForAllSignUpGatekeeper,
+  deployFreeForAllSignUpPolicy,
   deployConstantInitialVoiceCreditProxy,
   deployVerifier,
-} from "maci-sdk";
+} from "@maci-protocol/sdk";
+import chai from "chai";
+import chaiAsPromised from "chai-as-promised";
+import { Signer } from "ethers";
 
 import fs from "fs";
 import { homedir } from "os";
@@ -106,21 +106,26 @@ describe("Integration tests", function test() {
 
   // the code that we run before each test
   beforeEach(async () => {
-    const [signUpGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-    const signupGatekeeperAddress = await signUpGatekeeper.getAddress();
+    const [signUpPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+    const signupPolicyAddress = await signUpPolicy.getAddress();
 
-    const [pollGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-    const pollGatekeeperAddress = await pollGatekeeper.getAddress();
+    const [pollPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+    const pollPolicyAddress = await pollPolicy.getAddress();
 
     // create a new maci state
     maciState = new MaciState(STATE_TREE_DEPTH);
 
     // 3. deploy maci
-    contracts = await deployMaci({ stateTreeDepth: STATE_TREE_DEPTH, signupGatekeeperAddress, signer });
-
-    const initialVoiceCreditProxy = await deployConstantInitialVoiceCreditProxy(
-      DEFAULT_INITIAL_VOICE_CREDITS,
+    contracts = await deployMaci({
+      stateTreeDepth: STATE_TREE_DEPTH,
+      signupPolicyAddress,
       signer,
+    });
+
+    const [initialVoiceCreditProxy] = await deployConstantInitialVoiceCreditProxy(
+      { amount: DEFAULT_INITIAL_VOICE_CREDITS },
+      signer,
+      undefined,
       true,
     );
     const initialVoiceCreditProxyContractAddress = await initialVoiceCreditProxy.getAddress();
@@ -143,7 +148,7 @@ describe("Integration tests", function test() {
       initialVoiceCreditProxyContractAddress,
       verifierContractAddress,
       vkRegistryContractAddress: vkRegistryAddress,
-      gatekeeperContractAddress: pollGatekeeperAddress,
+      policyContractAddress: pollPolicyAddress,
       initialVoiceCredits: DEFAULT_INITIAL_VOICE_CREDITS,
       voteOptions: DEFAULT_VOTE_OPTIONS,
       relayers: [await signer.getAddress()],

@@ -1,4 +1,3 @@
-import { expect } from "chai";
 import {
   getBlockTimestamp,
   getDefaultSigner,
@@ -10,11 +9,12 @@ import {
   timeTravel,
   type IPollContractsData,
   type IMaciContracts,
-  deployFreeForAllSignUpGatekeeper,
+  deployFreeForAllSignUpPolicy,
   deployConstantInitialVoiceCreditProxy,
   deployVerifier,
   deployMaci,
-} from "maci-sdk";
+} from "@maci-protocol/sdk";
+import { expect } from "chai";
 
 import type { Signer } from "ethers";
 
@@ -39,15 +39,16 @@ describe("poll", function test() {
   before(async () => {
     signer = await getDefaultSigner();
 
-    const [signupGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-    const signupGatekeeperContractAddress = await signupGatekeeper.getAddress();
+    const [signupPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+    const signupPolicyContractAddress = await signupPolicy.getAddress();
 
-    const [pollGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-    const pollGatekeeperContractAddress = await pollGatekeeper.getAddress();
+    const [pollPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+    const pollPolicyContractAddress = await pollPolicy.getAddress();
 
-    const initialVoiceCreditProxy = await deployConstantInitialVoiceCreditProxy(
-      DEFAULT_INITIAL_VOICE_CREDITS,
+    const [initialVoiceCreditProxy] = await deployConstantInitialVoiceCreditProxy(
+      { amount: DEFAULT_INITIAL_VOICE_CREDITS },
       signer,
+      undefined,
       true,
     );
     initialVoiceCreditProxyContractAddress = await initialVoiceCreditProxy.getAddress();
@@ -66,7 +67,7 @@ describe("poll", function test() {
     maciAddresses = await deployMaci({
       ...deployArgs,
       signer,
-      signupGatekeeperAddress: signupGatekeeperContractAddress,
+      signupPolicyAddress: signupPolicyContractAddress,
     });
 
     // deploy a poll contract
@@ -79,7 +80,7 @@ describe("poll", function test() {
       maciAddress: maciAddresses.maciContractAddress,
       verifierContractAddress,
       vkRegistryContractAddress: vkRegistryAddress,
-      gatekeeperContractAddress: pollGatekeeperContractAddress,
+      policyContractAddress: pollPolicyContractAddress,
       initialVoiceCreditProxyContractAddress,
     });
   });

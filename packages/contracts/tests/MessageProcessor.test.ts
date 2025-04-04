@@ -1,10 +1,10 @@
 /* eslint-disable no-underscore-dangle */
+import { MaciState, Poll, IProcessMessagesCircuitInputs } from "@maci-protocol/core";
+import { NOTHING_UP_MY_SLEEVE } from "@maci-protocol/crypto";
+import { Keypair, Message, PubKey } from "@maci-protocol/domainobjs";
 import { expect } from "chai";
 import { Signer, ZeroAddress } from "ethers";
 import { EthereumProvider } from "hardhat/types";
-import { MaciState, Poll, IProcessMessagesCircuitInputs } from "maci-core";
-import { NOTHING_UP_MY_SLEEVE } from "maci-crypto";
-import { Keypair, Message, PubKey } from "maci-domainobjs";
 
 import { EMode } from "../ts/constants";
 import { IVerifyingKeyStruct } from "../ts/types";
@@ -17,7 +17,7 @@ import {
   Poll__factory as PollFactory,
   Verifier,
   VkRegistry,
-  SignUpGatekeeper,
+  IBasePolicy,
   ConstantInitialVoiceCreditProxy,
 } from "../typechain-types";
 
@@ -40,7 +40,7 @@ describe("MessageProcessor", () => {
   let vkRegistryContract: VkRegistry;
   let mpContract: MessageProcessor;
   let pollContract: PollContract;
-  let signupGatekeeperContract: SignUpGatekeeper;
+  let signupPolicyContract: IBasePolicy;
   let initialVoiceCreditProxyContract: ConstantInitialVoiceCreditProxy;
   let pollId: bigint;
 
@@ -66,7 +66,7 @@ describe("MessageProcessor", () => {
     signer = await getDefaultSigner();
     verifierContract = r.mockVerifierContract as Verifier;
     vkRegistryContract = r.vkRegistryContract;
-    signupGatekeeperContract = r.gatekeeperContract;
+    signupPolicyContract = r.policyContract;
     initialVoiceCreditProxyContract = r.constantInitialVoiceCreditProxyContract;
 
     // deploy on chain poll
@@ -79,7 +79,7 @@ describe("MessageProcessor", () => {
       verifier: verifierContract,
       vkRegistry: vkRegistryContract,
       mode: EMode.QV,
-      gatekeeper: signupGatekeeperContract,
+      policy: signupPolicyContract,
       initialVoiceCreditProxy: initialVoiceCreditProxyContract,
       relayers: [ZeroAddress],
       voteOptions: maxVoteOptions,

@@ -1,8 +1,8 @@
+import { MaciState, Poll, STATE_TREE_ARITY, MESSAGE_BATCH_SIZE } from "@maci-protocol/core";
+import { hash5, IncrementalQuinTree, poseidon } from "@maci-protocol/crypto";
+import { PrivKey, Keypair, PCommand, Message, Ballot } from "@maci-protocol/domainobjs";
 import { expect } from "chai";
 import { type WitnessTester } from "circomkit";
-import { MaciState, Poll, STATE_TREE_ARITY, MESSAGE_BATCH_SIZE } from "maci-core";
-import { hash5, IncrementalQuinTree, poseidon } from "maci-crypto";
-import { PrivKey, Keypair, PCommand, Message, Ballot } from "maci-domainobjs";
 
 import { IProcessMessagesInputs, ITallyVotesInputs } from "../types";
 
@@ -61,7 +61,7 @@ describe("Ceremony param tests", () => {
 
     before(async () => {
       circuit = await circomkitInstance.WitnessTester("processMessages", {
-        file: "./core/qv/processMessages",
+        file: "./coordinator/qv/processMessages",
         template: "ProcessMessages",
         params: [params.stateTreeDepth, MESSAGE_BATCH_SIZE, params.voteOptionTreeDepth],
       });
@@ -204,7 +204,7 @@ describe("Ceremony param tests", () => {
 
     before(async () => {
       testCircuit = await circomkitInstance.WitnessTester("tallyVotes", {
-        file: "./core/qv/tallyVotes",
+        file: "./coordinator/qv/tallyVotes",
         template: "TallyVotes",
         params: [14, 1, 3],
       });

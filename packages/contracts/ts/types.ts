@@ -1,5 +1,6 @@
-import type { ECheckerFactories, EGatekeeperFactories } from "../tasks/helpers/types";
+import type { ECheckerFactories, EPolicyFactories } from "../tasks/helpers/types";
 import type {
+  Factory,
   ConstantInitialVoiceCreditProxy,
   MACI,
   MockVerifier,
@@ -11,13 +12,13 @@ import type {
   PoseidonT5,
   PoseidonT6,
   VkRegistry,
-  Factory,
-  SignUpGatekeeper,
+  IBasePolicy,
 } from "../typechain-types";
 import type { TypedContractMethod } from "../typechain-types/common";
-import type { BigNumberish, Signer, ContractFactory, Provider, TransactionReceipt, BaseContract } from "ethers";
-import type { CircuitInputs } from "maci-core";
-import type { Keypair, Message, PubKey } from "maci-domainobjs";
+import type {} from "@excubiae/contracts/build/typechain-types";
+import type { CircuitInputs } from "@maci-protocol/core";
+import type { Keypair, Message, PubKey } from "@maci-protocol/domainobjs";
+import type { BigNumberish, Signer, ContractFactory, Provider, BaseContract } from "ethers";
 import type { PublicSignals } from "snarkjs";
 
 /**
@@ -83,7 +84,7 @@ export interface IDeployedTestContractsArgs {
   stateTreeDepth: number;
   signer?: Signer;
   quiet?: boolean;
-  gatekeeper?: SignUpGatekeeper;
+  policy?: IBasePolicy;
   factories?: [ContractFactory, ContractFactory, ContractFactory, ContractFactory];
 }
 
@@ -92,7 +93,7 @@ export interface IDeployedTestContractsArgs {
  */
 export interface IDeployedTestContracts {
   mockVerifierContract: MockVerifier;
-  gatekeeperContract: SignUpGatekeeper;
+  policyContract: IBasePolicy;
   constantInitialVoiceCreditProxyContract: ConstantInitialVoiceCreditProxy;
   maciContract: MACI;
   vkRegistryContract: VkRegistry;
@@ -140,9 +141,9 @@ export interface IDeployedPoseidonContracts {
  */
 export interface IDeployMaciArgs {
   /**
-   * The address of the SignUpTokenGatekeeper contract
+   * The address of the policy contract
    */
-  signUpTokenGatekeeperContractAddress: string;
+  policyContractAddress: string;
 
   /**
    * The signer to use to deploy the contract
@@ -328,16 +329,16 @@ export interface ILogArgs {
 }
 
 /**
- * Interface for the deploy gatekeeper arguments
+ * Interface for the deploy policy arguments
  */
-export interface IDeployGatekeeperArgs<
+export interface IDeployPolicyArgs<
   G extends ContractFactory = ContractFactory,
   C extends ContractFactory = ContractFactory,
 > {
   /**
-   * Gatekeeper factory name
+   * Policy factory name
    */
-  gatekeeperFactoryName: EGatekeeperFactories;
+  policyFactoryName: EPolicyFactories;
 
   /**
    * Checker factory name
@@ -345,9 +346,9 @@ export interface IDeployGatekeeperArgs<
   checkerFactoryName: ECheckerFactories;
 
   /**
-   * Gatekeeper factory
+   * Policy factory
    */
-  gatekeeperFactory: G;
+  policyFactory: G;
 
   /**
    * Checker factory
@@ -360,9 +361,9 @@ export interface IDeployGatekeeperArgs<
   signer: Signer;
 
   /**
-   * Gatekeeper deploy args
+   * Policy deploy args
    */
-  gatekeeperArgs?: unknown[];
+  policyArgs?: unknown[];
 
   /**
    * Checker deploy args
@@ -382,28 +383,3 @@ export type IFactoryLike<P extends unknown[] = []> = Factory &
   BaseContract & {
     deploy: TypedContractMethod<P, [], "nonpayable">;
   };
-
-/**
- * Interface that represents the argument for the get proxy contract function
- */
-export interface IGetProxyContractArgs<F = ContractFactory> {
-  /**
-   * Proxied contract factory
-   */
-  factory: F;
-
-  /**
-   * Proxy contract factory
-   */
-  proxyFactory: Factory;
-
-  /**
-   * Ethereum signer
-   */
-  signer?: Signer;
-
-  /**
-   * Transaction receipt
-   */
-  receipt?: TransactionReceipt | null;
-}

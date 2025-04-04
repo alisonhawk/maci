@@ -1,6 +1,6 @@
+import type { Groth16Proof, SnarkProof } from "@maci-protocol/contracts";
+import type { CircuitInputs } from "@maci-protocol/core";
 import type { BigNumberish, Signer } from "ethers";
-import type { Groth16Proof, SnarkProof } from "maci-contracts";
-import type { CircuitInputs } from "maci-core";
 import type { PublicSignals } from "snarkjs";
 
 import { ITallyData } from "../tally";
@@ -193,4 +193,19 @@ export interface IGenerateProofsData {
    * Tally data
    */
   tallyData: ITallyData;
+}
+
+/**
+ * Interface for the poll joining artifacts
+ */
+export interface IPollJoiningArtifacts {
+  /**
+   * The zkey
+   */
+  zKey: Uint8Array;
+
+  /**
+   * The wasm
+   */
+  wasm: Uint8Array;
 }

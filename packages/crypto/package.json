@@ -1,13 +1,17 @@
 {
-  "name": "maci-crypto",
-  "version": "2.5.0",
+  "name": "@maci-protocol/crypto",
+  "version": "3.0.0",
   "description": "A package containing cryptography utilities for MACI",
+  "private": false,
   "main": "build/ts/index.js",
   "files": [
     "build",
     "README.md",
     "CHANGELOG.md"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "watch": "tsc --watch",
     "benchmarks": "ts-node ts/__benchmarks__/index.ts",

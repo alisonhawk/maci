@@ -1,7 +1,7 @@
 {
-  "name": "maci-coordinator",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@maci-protocol/maci-coordinator",
+  "version": "1.0.0",
+  "private": false,
   "description": "Coordinator service for MACI",
   "main": "build/ts/main.js",
   "type": "module",
@@ -13,6 +13,9 @@
     "CHANGELOG.md",
     "README.md"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "hardhat": "hardhat node",
     "build": "nest build",
@@ -29,9 +32,9 @@
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.96.0",
-    "@nestjs/common": "^11.0.11",
+    "@nestjs/common": "^11.0.12",
     "@nestjs/core": "^11.0.11",
-    "@nestjs/platform-express": "^11.0.11",
+    "@nestjs/platform-express": "^11.0.12",
     "@nestjs/platform-socket.io": "^11.0.11",
     "@nestjs/swagger": "^11.0.6",
     "@nestjs/throttler": "^6.4.0",
@@ -39,7 +42,7 @@
     "@nomicfoundation/hardhat-ethers": "^3.0.8",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@zerodev/ecdsa-validator": "5.4.4",
-    "@zerodev/permissions": "5.5.3",
+    "@zerodev/permissions": "5.5.4",
     "@zerodev/sdk": "5.4.26",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -49,12 +52,10 @@
     "hardhat": "^2.22.19",
     "helmet": "^8.1.0",
     "lowdb": "^1.0.0",
-    "maci-cli": "^2.5.0",
-    "maci-contracts": "^2.5.0",
-    "maci-crypto": "^2.5.0",
-    "maci-domainobjs": "^2.5.0",
-    "maci-sdk": "^0.1.0",
-    "maci-subgraph": "^2.5.0",
+    "@maci-protocol/crypto": "^3.0.0",
+    "@maci-protocol/domainobjs": "^3.0.0",
+    "@maci-protocol/sdk": "^1.0.0",
+    "@maci-protocol/subgraph": "^3.0.0",
     "mustache": "^4.2.0",
     "permissionless": ">=0.1.18 <=0.1.29",
     "reflect-metadata": "^0.2.0",
@@ -68,7 +69,7 @@
     "@nestjs/cli": "^11.0.5",
     "@nestjs/schematics": "^11.0.2",
     "@nestjs/testing": "^11.0.11",
-    "@types/express": "^5.0.0",
+    "@types/express": "^5.0.1",
     "@types/jest": "^29.5.2",
     "@types/lowdb": "^1.0.15",
     "@types/node": "^22.13.10",
@@ -77,7 +78,7 @@
     "jest": "^29.5.0",
     "socket.io-client": "^4.7.5",
     "supertest": "^7.0.0",
-    "ts-jest": "^29.2.6",
+    "ts-jest": "^29.3.0",
     "typescript": "^5.8.2"
   },
   "jest": {

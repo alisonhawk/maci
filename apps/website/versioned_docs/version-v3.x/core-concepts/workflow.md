@@ -22,10 +22,11 @@ There are two key roles that participate in MACI:
 
 A "User" is any voter in a MACI poll.
 
-In order to participate in a MACI poll, a user will perform at least 2 on-chain transactions:
+In order to participate in a MACI poll, a user will perform at least 3 on-chain transactions (the first time they vote):
 
 1. Sign up with MACI
-2. Vote on a poll
+2. Join a poll
+3. Vote on a poll
 
 <!-- TODO: add flowchart that demonstrates this (but show happy path, not key switching) -->
 <!-- https://miro.medium.com/v2/resize:fit:1400/format:webp/0*whHfC8-xxAwSyaaO -->
@@ -73,7 +74,7 @@ The MACI contract is responsible for registering user signups by recording the i
 
 ### Poll.sol
 
-The Poll contract is where users submit their votes (via the [`publishMessage` function](/docs/technical-references/smart-contracts/solidity-docs/Poll#publishmessage)). One MACI contract can be used for multiple Poll contracts. In other words, a user that signed up to the MACI contract can vote on multiple issues, with each issue represented by a distinct Poll contract.
+The Poll contract is where users submit their votes (via the [`publishMessage` function](/docs/technical-references/smart-contracts/solidity-docs/Poll#publishmessage)). One MACI contract can be used for multiple Poll contracts. In other words, a user that signed up to the MACI contract can vote on multiple issues, with each issue represented by a distinct Poll contract. Each Poll contract will have its own independent state.
 
 ### MessageProcessor.sol and Tally.sol
 
@@ -99,7 +100,7 @@ During this stage, users can sign up and vote.
 
 Before a user can cast a vote, they must sign up by generating a MACI keypair and then sending the public key they wish to use to cast their vote to the MACI smart contract. This MACI public key (distinct from their Ethereum account public key) acts as their identity when voting. Users can vote from any Ethereum address, but their message must contain a signature from that MACI public key.
 
-This registration process is necessary to fortify MACI against Sybil attacks. The particular criteria used to allow user signups is customizable, and can be configured using any [SignUpGatekeeper contract](https://github.com/privacy-scaling-explorations/maci/blob/dev/packages/contracts/contracts/gatekeepers/SignUpGatekeeper.sol). This contract dictates the criteria a user must pass in order to participate in a poll. For example, a user might need to prove ownership of a certain NFT, or that they've received some attestation on EAS, or prove that they have passed some sort of proof-of-personhood verification. Note that MACI presumes an identity system where each legitimate member
+This registration process is necessary to fortify MACI against Sybil attacks. The particular criteria used to allow user signups is customizable, and can be configured using any [SignUpPolicy contract](https://github.com/privacy-scaling-explorations/excubiae/tree/main/packages/contracts/contracts/extensions). This contracts dictate the criteria a user must pass in order to participate in a poll. For example, a user might need to prove ownership of a certain NFT, or that they've received some attestation on EAS, or prove that they have passed some sort of proof-of-personhood verification. Note that MACI presumes an identity system where each legitimate member
 controls a unique private key - MACI does not specifically solve for this, but allows for customization on how this is configured.
 
 #### Vote

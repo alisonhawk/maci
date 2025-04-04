@@ -1,7 +1,7 @@
+import { MaciState, Poll } from "@maci-protocol/core";
+import { poseidon } from "@maci-protocol/crypto";
+import { Keypair, PCommand, Message } from "@maci-protocol/domainobjs";
 import { type WitnessTester } from "circomkit";
-import { MaciState, Poll } from "maci-core";
-import { poseidon } from "maci-crypto";
-import { Keypair, PCommand, Message } from "maci-domainobjs";
 
 import { ITallyVotesInputs } from "../types";
 
@@ -50,13 +50,13 @@ describe("TallyVotes circuit", function test() {
 
   before(async () => {
     circuit = await circomkitInstance.WitnessTester("tallyVotes", {
-      file: "./core/qv/tallyVotes",
+      file: "./coordinator/qv/tallyVotes",
       template: "TallyVotes",
       params: [10, 1, 2],
     });
 
     circuitNonQv = await circomkitInstance.WitnessTester("tallyVotesNonQv", {
-      file: "./core/non-qv/tallyVotes",
+      file: "./coordinator/non-qv/tallyVotes",
       template: "TallyVotesNonQv",
       params: [10, 1, 2],
     });

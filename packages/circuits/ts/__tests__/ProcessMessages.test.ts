@@ -1,8 +1,8 @@
+import { MaciState, Poll, STATE_TREE_ARITY } from "@maci-protocol/core";
+import { IncrementalQuinTree, hash2, poseidon } from "@maci-protocol/crypto";
+import { PrivKey, Keypair, PCommand, Message, Ballot, PubKey } from "@maci-protocol/domainobjs";
 import { expect } from "chai";
 import { type WitnessTester } from "circomkit";
-import { MaciState, Poll, STATE_TREE_ARITY } from "maci-core";
-import { IncrementalQuinTree, hash2, poseidon } from "maci-crypto";
-import { PrivKey, Keypair, PCommand, Message, Ballot, PubKey } from "maci-domainobjs";
 
 import fs from "fs";
 
@@ -54,13 +54,13 @@ describe("ProcessMessage circuit", function test() {
 
   before(async () => {
     circuit = await circomkitInstance.WitnessTester("processMessages", {
-      file: "./core/qv/processMessages",
+      file: "./coordinator/qv/processMessages",
       template: "ProcessMessages",
       params: [10, 20, 2],
     });
 
     circuitNonQv = await circomkitInstance.WitnessTester("processMessagesNonQv", {
-      file: "./core/non-qv/processMessages",
+      file: "./coordinator/non-qv/processMessages",
       template: "ProcessMessagesNonQv",
       params: [10, 20, 2],
     });

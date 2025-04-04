@@ -1,5 +1,4 @@
-import hardhat from "hardhat";
-import { Keypair } from "maci-domainobjs";
+import { Keypair } from "@maci-protocol/domainobjs";
 import {
   EMode,
   extractAllVks,
@@ -11,10 +10,11 @@ import {
   deployPoll,
   deployVkRegistryContract,
   ContractStorage,
-  deployFreeForAllSignUpGatekeeper,
+  deployFreeForAllSignUpPolicy,
   deployVerifier,
   deployConstantInitialVoiceCreditProxy,
-} from "maci-sdk";
+} from "@maci-protocol/sdk";
+import hardhat from "hardhat";
 
 import type { ITestingClassPaths, IContractsData } from "./types";
 
@@ -146,21 +146,22 @@ export class TestingClass {
       signer,
     });
 
-    const [signupGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-    const signupGatekeeperContractAddress = await signupGatekeeper.getAddress();
+    const [signupPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+    const signupPolicyContractAddress = await signupPolicy.getAddress();
 
-    const [pollGatekeeper] = await deployFreeForAllSignUpGatekeeper(signer, true);
-    const pollGatekeeperContractAddress = await pollGatekeeper.getAddress();
+    const [pollPolicy] = await deployFreeForAllSignUpPolicy(signer, true);
+    const pollPolicyContractAddress = await pollPolicy.getAddress();
 
     const maciAddresses = await deployMaci({
       stateTreeDepth: 10,
       signer,
-      signupGatekeeperAddress: signupGatekeeperContractAddress,
+      signupPolicyAddress: signupPolicyContractAddress,
     });
 
-    const initialVoiceCreditProxy = await deployConstantInitialVoiceCreditProxy(
-      DEFAULT_INITIAL_VOICE_CREDITS,
+    const [initialVoiceCreditProxy] = await deployConstantInitialVoiceCreditProxy(
+      { amount: DEFAULT_INITIAL_VOICE_CREDITS },
       signer,
+      undefined,
       true,
     );
     const initialVoiceCreditProxyContractAddress = await initialVoiceCreditProxy.getAddress();
@@ -182,7 +183,7 @@ export class TestingClass {
       signer,
       verifierContractAddress,
       maciAddress: maciAddresses.maciContractAddress,
-      gatekeeperContractAddress: pollGatekeeperContractAddress,
+      policyContractAddress: pollPolicyContractAddress,
       initialVoiceCreditProxyContractAddress,
       voteOptions: DEFAULT_VOTE_OPTIONS,
       vkRegistryContractAddress: vkRegistry,

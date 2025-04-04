@@ -1,5 +1,5 @@
-import { stringifyBigInts } from "maci-crypto";
-import { IVkObjectParams } from "maci-domainobjs";
+import { stringifyBigInts } from "@maci-protocol/crypto";
+import { IVkObjectParams } from "@maci-protocol/domainobjs";
 import { groth16, type PublicSignals, type Groth16Proof, zKey } from "snarkjs";
 
 import childProcess from "child_process";
@@ -21,12 +21,6 @@ import { cleanThreads, unlinkFile } from "./utils";
 export const genProofSnarkjs = async ({ inputs, zkeyPath, wasmPath }: IGenProofOptions): Promise<FullProveResult> => {
   if (!wasmPath) {
     throw new Error("wasmPath must be specified");
-  }
-
-  const isWasmExists = fs.existsSync(wasmPath);
-
-  if (!isWasmExists) {
-    throw new Error(`wasmPath ${wasmPath} does not exist`);
   }
 
   const { proof, publicSignals } = await groth16.fullProve(inputs, wasmPath, zkeyPath);

@@ -1,7 +1,7 @@
+import { MaciState, Poll } from "@maci-protocol/core";
+import { poseidon } from "@maci-protocol/crypto";
+import { Keypair, Message, PCommand } from "@maci-protocol/domainobjs";
 import { type WitnessTester } from "circomkit";
-import { MaciState, Poll } from "maci-core";
-import { poseidon } from "maci-crypto";
-import { Keypair, Message, PCommand } from "maci-domainobjs";
 
 import { IPollJoiningInputs } from "../types";
 
@@ -37,7 +37,7 @@ describe("Poll Joining circuit", function test() {
 
   before(async () => {
     circuit = await circomkitInstance.WitnessTester("pollJoining", {
-      file: "./anon/poll",
+      file: "./voter/poll",
       template: "PollJoining",
       params: [STATE_TREE_DEPTH],
     });

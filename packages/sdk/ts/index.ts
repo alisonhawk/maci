@@ -13,7 +13,7 @@ export * from "./maciKeys";
 export {
   EMode,
   EContracts,
-  EGatekeepers,
+  EPolicies,
   EInitialVoiceCreditProxies,
   EDeploySteps,
   Deployment,
@@ -28,7 +28,7 @@ export {
   verifyProof,
   linkPoseidonLibraries,
   deployConstantInitialVoiceCreditProxy,
-  deployFreeForAllSignUpGatekeeper,
+  deployFreeForAllSignUpPolicy,
   deployMockVerifier,
   deployVkRegistry,
   deployVerifier,
@@ -46,7 +46,9 @@ export {
   warning,
   error,
   genEmptyBallotRoots,
-} from "maci-contracts";
+  getProxyContract,
+  deployProxyClone,
+} from "@maci-protocol/contracts";
 
 export type {
   FullProveResult,
@@ -58,6 +60,8 @@ export type {
   IVerifyingKeyStruct,
   SnarkProof,
   IIpfsMessage,
-} from "maci-contracts";
+  IDeployCloneArgs,
+  IGetProxyContractArgs,
+} from "@maci-protocol/contracts";
 
-export * from "maci-contracts/typechain-types";
+export * from "@maci-protocol/contracts/typechain-types";
